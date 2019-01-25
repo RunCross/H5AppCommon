@@ -1,0 +1,3 @@
+# H5AppCommon
+试图封装Android的一个webView壳，通过WebViewJavascriptBridge实现和H5的沟通
+

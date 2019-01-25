@@ -1,0 +1,68 @@
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <!-- // width    设置viewport宽度，为一个正整数，或字符串‘device-width’
+        // height   设置viewport高度，一般设置了宽度，会自动解析出高度，可以不用设置
+        // initial-scale    默认缩放比例，为一个数字，可以带小数
+        // minimum-scale    允许用户最小缩放比例，为一个数字，可以带小数
+        // maximum-scale    允许用户最大缩放比例，为一个数字，可以带小数
+        // user-scalable    是否允许手动缩放 -->
+
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+</head>
+
+<body>
+    <div id="post">bbbbbbbbbbbbbbbbbbbbbbbb</div>
+    <script>
+        function setupWebViewJavascriptBridge(callback) {
+            if (window.WebViewJavascriptBridge) {
+                return callback(WebViewJavascriptBridge);
+            }
+            if (window.WVJBCallbacks) {
+                return window.WVJBCallbacks.push(callback);
+            }
+            window.WVJBCallbacks = [callback];
+            var WVJBIframe = document.createElement('iframe');
+            WVJBIframe.style.display = 'none';
+            WVJBIframe.src = 'https://__bridge_loaded__';
+            document.documentElement.appendChild(WVJBIframe);
+            setTimeout(function() {
+                document.documentElement.removeChild(WVJBIframe)
+            }, 0)
+        }
+
+        // setupWebViewJavascriptBridge(function (bridge) { bridge.init(function (message, responseCallback) {}); })
+
+
+        $("#post").click(function() {
+            // alert("dddddd");
+            setupWebViewJavascriptBridge(function(bridge) {
+                // 隐藏、显示MOA原生导航栏 
+                var params = {
+                    'status': 'hide',
+                    'animated': 1,
+                    'title': 'test'
+                }; // status值为hide时隐藏导		航栏，其他值显示；animated值为1和0，1附带动画效果，title为导航栏标题
+                bridge.callHandler('app.post', params, function(response) {
+                    $("#post").html(response);
+                    // alert(response);
+                })
+            })
+        })
+
+        if (window.localStorage) {
+            alert('This browser supports localStorage');
+        } else {
+            alert('This browser does NOT support localStorage');
+        }
+
+        if (window.sessionStorage) {
+            alert('This browser supports sessionStorage');
+        } else {
+            alert('This browser does NOT support sessionStorage');
+        }
+    </script>
+</body>
+
+</html>
